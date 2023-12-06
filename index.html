@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe Game</title>
+  <style>
+    body {
+      font-family: 'Comic sans MS', sans-serif;
+      text-align: center;
+      text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+      color: darkblue;
+      background-image: url("https://wallpapers.com/images/hd/beautiful-background-a3dh75pr36411yr7.jpg");
+      background-size: cover;
+    }
+    #board-container {
+      margin: 20px;
+      animation: bounceMargin 1s infinite alternate; 
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      margin: 20px auto;
+      justify-content: center;
+      align-items: center;
+      
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 30px;
+      color: red;
+      border: 2px solid #ccc;
+      background-image: url("https://img.freepik.com/free-vector/pink-flower-frame-background-with-watercolor_65186-2566.jpg?size=626&ext=jpg&ga=GA1.1.1222169770.1701734400&semt=ais");
+      background-size: cover;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+
+    #result {
+      display: none;
+      margin-top: 20px;
+      font-size: 20px;
+      text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+      animation: slideIn 1s ease-in-out forwards, fadeIn 1s 1.5s ease-in-out forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="board-container"></div>
+
+<h1><i><b>Tic Tac Toe</b></i></h1>
+
+<div id="board"></div>
+<div id="result"></div>
+
+<script>
+  const board = document.getElementById('board');
+  const cells = [];
+
+  let currentPlayer = 'X';
+  let gameActive = true;
+
+  function createBoard() {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.row = i;
+        cell.dataset.col = j;
+        cell.addEventListener('click', cellClick);
+        board.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+  }
+
+  function cellClick() {
+    if (!gameActive || this.textContent !== '') return;
+
+    this.textContent = currentPlayer;
+    if (checkWinner()) {
+      alert(`${currentPlayer} wins!`);
+      gameActive = false;
+    } else if (checkTie()) {
+      alert('It\'s a tie!');
+      gameActive = false;
+    } else {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+  }
+
+  function checkWinner() {
+    const winningCombos = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+      [0, 4, 8], [2, 4, 6]             // Diagonals
+    ];
+
+    return winningCombos.some(combo => {
+      const [a, b, c] = combo;
+      return cells[a].textContent !== '' &&
+             cells[a].textContent === cells[b].textContent &&
+             cells[a].textContent === cells[c].textContent;
+    });
+  }
+
+  function checkTie() {
+    return cells.every(cell => cell.textContent !== '');
+  }
+
+  createBoard();
+</script>
+
+</body>
+</html>
+
+
 
